@@ -7,10 +7,12 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var hello = require('./routes/hello');
 
 var app = express();
 
 // view engine setup
+// 表明要使用的模板引擎是 ejs，页面模板在 views 子目录下。
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -26,17 +28,23 @@ app.use(cookieParser());
 //http://localhost:3000/css/style.css
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);//规定路径为“ /”的 GET 请求由 routes.index 函数处理
+app.use('/', index);
 app.use('/users', users);
+//app.use('/user/:username', users);
+
+app.use('/hello', hello);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
+
+  //通过调用next()，会将路由控制权转移给后面的规则，
   next(err);
 });
 
 // error handler
+// this middleware will be executed for every request to the app
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
