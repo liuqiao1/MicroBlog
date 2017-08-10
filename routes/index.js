@@ -5,7 +5,7 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
   //调用视图模板 index，传递 title变量。
  
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Express', layout: 'layout'});
 });
 
 module.exports = router;

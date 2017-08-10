@@ -2,8 +2,14 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
+var session = require('express-session'); //如果要使用session，需要单独包含这个模块
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var partials = require('express-partials');
+
+var MongoStore = require('connect-mongo')
+
+var settings = require('./settings');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -15,6 +21,19 @@ var app = express();
 // 表明要使用的模板引擎是 ejs，页面模板在 views 子目录下。
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.set('view options', {
+    layout: true
+});
+
+
+app.use(partials());
+
+app.use(express.session({
+  secret: settings.cookieSecret,
+  store: new MongoStore({
+      db: settings.db
+  })  
+}));
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
